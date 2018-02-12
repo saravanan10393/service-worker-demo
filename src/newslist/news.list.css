@@ -1,0 +1,41 @@
+.storyList{
+  overflow-y: auto;
+}
+
+.storyList .header{
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: auto;
+  line-height: 50px;
+  cursor: pointer;
+}
+
+.stories{
+  overflow-y: auto;
+}
+
+.stories li{
+  display: grid;
+  grid-template-columns: 1fr minmax(100px, 200px) minmax(100px, 200px);
+  grid-row-gap: 15px;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 5px;
+}
+
+.stories li div:not(:first-child){
+  padding: 0px 10px;
+}
+
+.stories li h3{
+  font-weight: bold;
+}
+
+.comment{
+  margin: 10px 0px;
+  padding: 5px 10px;
+  border-bottom: 1px solid #ddd;
+  display: block;
+  border: none;
+  width: 100%;
+  resize: none;
+}
