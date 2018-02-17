@@ -43,6 +43,27 @@ class StoriesList extends Component{
     this.getStoryList(this.props.type);
   }
 
+  componentDidMount() {
+    navigator.serviceWorker.onmessage = (event) => {
+      
+      let url = event.data;
+      if(url.indexOf(this.props.type) != -1) {
+        caches.match(url).then((response) => {
+          if(response) {
+            let stories = response.json()
+              .then((data) => data)
+              .then((stories)=> {
+                console.log('### refresh list json', stories);
+                this.setState({ stories: stories.slice(0,20) })
+              });
+          }else {
+            console.log('no resonse found in storylist cache')
+          }
+        })
+      }
+    }
+  }
+
   getStoryList(storyType) {
     Service.getStories(storyType)
       .then((stories) => {
@@ -94,6 +115,8 @@ class Story extends Component {
     }
     this.getItem(this.props.itemId);
   }
+
+
 
   getItem(itemId) {
     Service.getItem(itemId)
