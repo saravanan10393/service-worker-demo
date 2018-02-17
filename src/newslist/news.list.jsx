@@ -46,7 +46,7 @@ class StoriesList extends Component{
   getStoryList(storyType) {
     Service.getStories(storyType)
       .then((stories) => {
-        this.setState({ stories: stories.slice(0,50) })
+        this.setState({ stories: stories.slice(0,20) })
       })
       .catch((err) => {
         console.log(`Failed to get stories ${storyType}`);
@@ -85,7 +85,7 @@ class StoriesList extends Component{
 
 class Story extends Component {
   static propTypes = {
-    itemId: PropTypes.string.isRequired
+    itemId: PropTypes.number.isRequired
   }
   constructor(props) {
     super(props);
