@@ -85,10 +85,47 @@ function cacheAndUpdate(event) {
   )
 }
 
+function cacheUpdateAndRefresh(event) {
+  let requestURl = new URL(event.request.url);
+
+  event.respondWith(
+    caches.match(event.request)
+      .then((cacheResponse) => {
+        //let fetchRequest = event.request.clone();
+        let fetchResult = fetch(event.request)
+          .then((fetchResponse) => {
+            if(!fetchResponse || fetchResponse.status != 200) {
+              console.log('request result is not 200', requestURl.pathname, fetchResponse.status)
+              return fetchResponse;
+            }
+
+            let responseClone = fetchResponse.clone();
+            caches.open(CACHE_NAME)
+            .then((cache) => {
+              console.log('#####cached the response in cache');
+              cache.put(event.request, responseClone);
+              
+              //notify the client about new message
+              self.clients.matchAll().then((clients) => {
+                clients.forEach((client) => {
+                    client.postMessage(responseClone.url);                    
+                })
+              })
+
+            })
+            return fetchResponse;
+          });
+
+          return cacheResponse || fetchResult;
+      })
+  )
+}
+
 self.addEventListener('fetch', (event) => {
-  cacheFristMethod(event);
+  //cacheFristMethod(event);
 
   //cacheAndUpdate(event)
 
+  cacheUpdateAndRefresh(event);
 
 });
